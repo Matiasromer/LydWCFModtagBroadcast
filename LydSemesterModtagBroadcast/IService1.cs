@@ -14,12 +14,10 @@ namespace LydSemesterModtagBroadcast
     {
 
         [OperationContract]
-        string GetData(int value);
+        int PostLydToList(string lyd);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
-
-        // TODO: Add your service operations here
+        IList<Lyd> GetAllLyd();
     }
 
 
