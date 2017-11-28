@@ -9,6 +9,10 @@ namespace LydSemesterModtagBroadcast
     [DataContract]
     public class Lyd
     {
+
+        [DataMember]
+        public DateTime Date;
+
         [DataMember]
         public string Lyde;
 

@@ -35,11 +35,12 @@ namespace LydSemesterModtagBroadcast
                         {
                             int id = reader.GetInt32(0);
                             string lyde = reader.GetString(1);
-
+                            DateTime date = reader.GetDateTime(2);
                             Lyd l1 = new Lyd()
                             {
                                 Id = id,
-                                Lyde = lyde
+                                Lyde = lyde,
+                                Date = date
                             };
                             lydList.Add(l1);
                         }
@@ -70,14 +71,14 @@ namespace LydSemesterModtagBroadcast
 
         public int PostLydToList(string lyde)
         {
-            const string postLyde = "insert into Lydmaling (Lyde) values (@lyde)";
+            const string postLyde = "insert into Lydmaling (Lyde, Date) values (@lyde, GETDATE())";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
                 using (SqlCommand insertCommand = new SqlCommand(postLyde, databaseConnection))
                 {
                     insertCommand.Parameters.AddWithValue("@lyde", lyde);
-
+                    
                     int rowsAffected = insertCommand.ExecuteNonQuery();
                     return rowsAffected;
 
