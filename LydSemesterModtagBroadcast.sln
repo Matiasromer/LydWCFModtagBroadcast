@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LydSemesterModtagBroadcast", "LydSemesterModtagBroadcast\LydSemesterModtagBroadcast.csproj", "{04A18E84-41C4-4B29-A1CE-4DDF3AA34504}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LydSemesterModtagBroadcastTests", "LydSemesterModtagBroadcastTests\LydSemesterModtagBroadcastTests.csproj", "{AD8E02B9-C343-43D4-9EE4-6963CFECBFCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{04A18E84-41C4-4B29-A1CE-4DDF3AA34504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04A18E84-41C4-4B29-A1CE-4DDF3AA34504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04A18E84-41C4-4B29-A1CE-4DDF3AA34504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD8E02B9-C343-43D4-9EE4-6963CFECBFCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD8E02B9-C343-43D4-9EE4-6963CFECBFCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD8E02B9-C343-43D4-9EE4-6963CFECBFCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD8E02B9-C343-43D4-9EE4-6963CFECBFCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

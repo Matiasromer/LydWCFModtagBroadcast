@@ -18,6 +18,9 @@ namespace LydSemesterModtagBroadcast
 
         [OperationContract]
         IList<Lyd> GetAllLyd();
+
+        [OperationContract]
+        bool TjekStatus();
     }
 
 

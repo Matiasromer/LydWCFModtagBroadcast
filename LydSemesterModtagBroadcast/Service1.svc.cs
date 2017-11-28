@@ -18,6 +18,35 @@ namespace LydSemesterModtagBroadcast
                 "Server=tcp:eventmserver.database.windows.net,1433;Initial Catalog=EMDatabase;Persist Security Info=False;User ID=Matias;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
             ;
 
+        public bool TjekStatus()
+        {
+            const string gemswitch = "SELECT TOP(1) OnOff from Switch";
+
+            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+            {
+                databaseConnection.Open();
+                using (SqlCommand selectCommand = new SqlCommand(gemswitch, databaseConnection))
+                {
+                    using (SqlDataReader reader = selectCommand.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //bool kontakt = reader.GetBoolean(1);
+                            bool kontakt = (bool)reader["OnOff"];
+
+
+                            if (kontakt == true)
+                            {
+                                return true;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public IList<Lyd> GetAllLyd()
         {
             const string selectAllLyde = "Select * from Lydmaling";
@@ -71,7 +100,7 @@ namespace LydSemesterModtagBroadcast
 
         public int PostLydToList(string lyde)
         {
-            const string postLyde = "insert into Lydmaling (Lyde, Date) values (@lyde, GETDATE())";
+            const string postLyde = "insert into Lydmaling (Lyde) values (@lyde)";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
