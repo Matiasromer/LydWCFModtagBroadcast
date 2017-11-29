@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -32,14 +33,14 @@ namespace LydSemesterModtagBroadcast
                         while (reader.Read())
                         {
                             //bool kontakt = reader.GetBoolean(1);
-                            bool kontakt = (bool)reader["OnOff"];
+                            bool kontakt = (bool) reader["OnOff"];
 
 
                             if (kontakt == true)
                             {
                                 return true;
                             }
-                            
+
                         }
                     }
                 }
@@ -78,7 +79,7 @@ namespace LydSemesterModtagBroadcast
                 }
             }
         }
-    
+
 
         public string GetData(int value)
         {
@@ -107,7 +108,7 @@ namespace LydSemesterModtagBroadcast
                 using (SqlCommand insertCommand = new SqlCommand(postLyde, databaseConnection))
                 {
                     insertCommand.Parameters.AddWithValue("@lyde", lyde);
-                    
+
                     int rowsAffected = insertCommand.ExecuteNonQuery();
                     return rowsAffected;
 
@@ -140,37 +141,59 @@ namespace LydSemesterModtagBroadcast
 
         public void Updat2()
         {
-            bool value = false;
-            const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
+
+            // const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
             bool status = TjekStatus();
 
             if (status == true)
             {
-                
-                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
-                {
-                    databaseConnection.Open();
-                    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
-                    {
-                        updateCommand.Parameters.AddWithValue("@Value", value);
-                    }
-                }
+                bool value = false;
+                const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
+
+                SqlConnection con = new SqlConnection(ConnectionString);
+                SqlCommand UpdateCommand = new SqlCommand(update, con);
+                UpdateCommand.Parameters.AddWithValue("@Value", SqlDbType.Bit).Value = 0;
+                con.Open();
+                UpdateCommand.ExecuteNonQuery();
+                con.Close();
+
+                //using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+                //{
+                //    databaseConnection.Open();
+                //    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
+                //    {
+                //        updateCommand.Parameters.AddWithValue("@Value", value);
+                //    }
+                //}
+
             }
 
             else if (status == false)
+
             {
-                value = true;
-                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
-                {
-                    databaseConnection.Open();
-                    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
-                    {
-                        updateCommand.Parameters.AddWithValue("@Value", value);
-                    }
-                }
+                bool value = true;
+                const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
+
+                //using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+                //{
+                //    databaseConnection.Open();
+                //    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
+                //    {
+                //        updateCommand.Parameters.AddWithValue("@Value", value);
+
+                //        updateCommand.EndExecuteNonQuery();
+
+                //    }
+
+                //}
+                SqlConnection con = new SqlConnection(ConnectionString);
+                SqlCommand UpdateCommand = new SqlCommand(update, con);
+                UpdateCommand.Parameters.AddWithValue("@Value", SqlDbType.Bit).Value = 1;
+                con.Open();
+                UpdateCommand.ExecuteNonQuery();
+                con.Close();
+
             }
-
-
         }
     }
 }
