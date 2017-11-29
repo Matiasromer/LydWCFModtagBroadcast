@@ -114,5 +114,63 @@ namespace LydSemesterModtagBroadcast
                 }
             }
         }
+
+        //public void UpdateStatus(string onOff)
+        //{
+
+        //    bool value = false;
+        //    if (onOff == "1")
+        //    {
+        //        value = true;
+        //    }
+        //    const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
+
+        //    using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+        //    {
+        //        databaseConnection.Open();
+        //        using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
+        //        {
+        //            updateCommand.Parameters.AddWithValue("@Value", value);
+
+
+        //        }
+        //    }
+
+        //}
+
+        public void Updat2()
+        {
+            bool value = false;
+            const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
+            bool status = TjekStatus();
+
+            if (status == true)
+            {
+                
+                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+                {
+                    databaseConnection.Open();
+                    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
+                    {
+                        updateCommand.Parameters.AddWithValue("@Value", value);
+                    }
+                }
+            }
+
+            else if (status == false)
+            {
+                value = true;
+                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+                {
+                    databaseConnection.Open();
+                    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
+                    {
+                        updateCommand.Parameters.AddWithValue("@Value", value);
+                    }
+                }
+            }
+
+
+        }
     }
 }

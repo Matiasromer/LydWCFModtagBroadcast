@@ -21,6 +21,12 @@ namespace LydSemesterModtagBroadcast
 
         [OperationContract]
         bool TjekStatus();
+
+        [OperationContract]
+        void Updat2();
+
+        //[OperationContract]
+        //void UpdateStatus(string onOff);
     }
 
 
