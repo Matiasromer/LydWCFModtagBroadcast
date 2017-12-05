@@ -25,6 +25,19 @@ namespace LydSemesterModtagBroadcast
         [OperationContract]
         void Updat2();
 
+        [OperationContract]
+        IList<Lyd> GetAlllydSorted();
+
+        // Test metode der henter alle lyde der har IsSted = 2
+        [OperationContract]
+        IList<Lyd> GetAlllydSted2();
+
+        [OperationContract]
+        IList<Personale> GetAllPersonale();
+
+        // Henter den inner join tabel, så lyd viser også sted (Hardcoded i db)
+        [OperationContract]
+        IList<Lyd> GetAllLydMedSted();
         //[OperationContract]
         //void UpdateStatus(string onOff);
     }

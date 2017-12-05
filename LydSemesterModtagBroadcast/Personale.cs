@@ -7,19 +7,18 @@ using System.Web;
 namespace LydSemesterModtagBroadcast
 {
     [DataContract]
-    public class Lyd
+    public class Personale
     {
+        
 
         [DataMember]
-        public DateTime Date;
+
+        public string Navn;
 
         [DataMember]
-        public string Lyde;
+        public int Telf;
 
         [DataMember]
-        public int Id;
-
-        [DataMember]
-        public string Sted;
+        public string Email;
     }
 }
