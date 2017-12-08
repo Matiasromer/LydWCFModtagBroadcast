@@ -11,6 +11,15 @@ namespace LydSemesterModtagBroadcast.Tests
     [TestClass()]
     public class Service1Tests
     {
+        [TestMethod()]
+        public void SetIdStedTest()
+        {
+            Service1 service = new Service1();
+
+            service.SetIdSted(3);
+
+            //Assert.Fail();
+        }
         //[TestMethod()]
         //public void GetAllLydTest()
         //{

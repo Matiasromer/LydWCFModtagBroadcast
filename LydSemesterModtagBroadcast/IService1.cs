@@ -17,6 +17,13 @@ namespace LydSemesterModtagBroadcast
         int PostLydToList(string lyd);
 
         [OperationContract]
+        int SetIdSted(string SetId);
+        //[OperationContract]
+        //int SetStedId(int stedid);
+        [OperationContract]
+        int usestedid();
+
+        [OperationContract]
         IList<Lyd> GetAllLyd();
 
         [OperationContract]
@@ -28,7 +35,7 @@ namespace LydSemesterModtagBroadcast
         [OperationContract]
         IList<Lyd> GetAlllydSorted();
 
-        // Test metode der henter alle lyde der har IsSted = 2
+        // Test metode der henter alle lyde der har IdSted = 2
         [OperationContract]
         IList<Lyd> GetAlllydSted2();
 

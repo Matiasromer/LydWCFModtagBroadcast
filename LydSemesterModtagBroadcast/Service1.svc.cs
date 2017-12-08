@@ -103,19 +103,113 @@ namespace LydSemesterModtagBroadcast
         // Poster lyden fra udp reciever til databasen
         public int PostLydToList(string lyde)
         {
-            const string postLyde = "insert into Lydmaling (Lyde) values (@lyde)";
+            int hentstedid = usestedid();
+                const string postLyde = "insert into Lydmaling (Lyde, [FK IdSted]) values (@lyde, @sted)";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
                 using (SqlCommand insertCommand = new SqlCommand(postLyde, databaseConnection))
                 {
                     insertCommand.Parameters.AddWithValue("@lyde", lyde);
-
+                    insertCommand.Parameters.AddWithValue("@sted", hentstedid);
                     int rowsAffected = insertCommand.ExecuteNonQuery();
                     return rowsAffected;
 
                 }
             }
+
+        }
+
+        public int SetIdSted(string stedstr)
+        {
+            int sted = Int32.Parse(stedstr);
+            
+            const string setid = "UPDATE StedID SET IdSted = @sted";
+
+            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+            {
+                databaseConnection.Open();
+                using (SqlCommand updateCommand = new SqlCommand(setid, databaseConnection))
+                {
+                    updateCommand.Parameters.AddWithValue("@sted", sted);
+                    int rowsAffected = updateCommand.ExecuteNonQuery();
+                    return rowsAffected;
+                }
+            }
+        }
+
+        public int usestedid()
+        {
+            const string kaldid = "SELECT * FROM StedID";
+
+
+            using (SqlConnection databaseConnection= new SqlConnection(ConnectionString))
+            {
+                databaseConnection.Open();
+                using (SqlCommand selectIdCommand = new SqlCommand(kaldid, databaseConnection))
+                {
+                    using (SqlDataReader reader = selectIdCommand.ExecuteReader())
+                    {
+                        int stedid = 0;
+
+                        while (reader.Read())
+                        {
+                            stedid = reader.GetInt32(0);
+                        }
+                        return stedid;
+                    }
+                }
+
+            }
+        }
+
+        //public int SetStedId(int stedid)
+        //{
+
+        //    const string hentparameter = "SELECT IdSted FROM Steder WHERE IdSted = @stedid";
+        //    using (SqlConnection databaseConnection1 = new SqlConnection(ConnectionString))
+        //    {
+        //        databaseConnection1.Open();
+        //        using (SqlCommand getCommand = new SqlCommand(hentparameter, databaseConnection1))
+        //        {
+        //            getCommand.Parameters.AddWithValue("@stedid", stedid);
+        //            using (SqlDataReader reader = getCommand.ExecuteReader())
+        //            {
+        //                int stedparameter = 0;
+
+        //                while (reader.Read())
+        //                {
+        //                    stedparameter = reader.GetInt32(0);
+        //                }
+        //                return stedparameter;
+        //            }
+        //        }
+        //    }
+
+        //}
+
+        public int SetStedId2()
+        {
+
+            const string hentparameter = "SELECT IdSted FROM Steder WHERE IdSted = 2";
+            using (SqlConnection databaseConnection1 = new SqlConnection(ConnectionString))
+            {
+                databaseConnection1.Open();
+                using (SqlCommand getCommand = new SqlCommand(hentparameter, databaseConnection1))
+                {
+                    using (SqlDataReader reader = getCommand.ExecuteReader())
+                    {
+                        int stedparameter = 0;
+
+                        while (reader.Read())
+                        {
+                            stedparameter = reader.GetInt32(0);
+                        }
+                        return stedparameter;
+                    }
+                }
+            }
+
         }
 
         //public void UpdateStatus(string onOff)
@@ -200,7 +294,7 @@ namespace LydSemesterModtagBroadcast
         // Sorter listen af lyde efter lydniveau (descending) fra lavent til højest
         public IList<Lyd> GetAlllydSorted()
         {
-            const string selectAllLyde = "SELECT * FROM Lydmaling ORDER BY Lyde DESC";
+            const string selectAllLyde = "SELECT Lydmaling.Lyde, Lydmaling.Dato, Steder.Sted FROM Lydmaling INNER JOIN Steder ON Lydmaling.[FK IdSted]=Steder.IdSted ORDER BY Lyde DESC";
 
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
@@ -214,14 +308,16 @@ namespace LydSemesterModtagBroadcast
 
                         while (reader.Read())
                         {
-                            int id = reader.GetInt32(0);
-                            string lyde = reader.GetString(1);
-                            DateTime date = reader.GetDateTime(2);
+                            
+                            string lyde = reader.GetString(0);
+                            DateTime date = reader.GetDateTime(1);
+                            string sted = reader.GetString(2);
                             Lyd l1 = new Lyd()
                             {
-                                Id = id,
+                                
                                 Lyde = lyde,
-                                Date = date
+                                Date = date,
+                                Sted = sted
                             };
 
                             lydList.Add(l1);
@@ -307,7 +403,7 @@ namespace LydSemesterModtagBroadcast
             }
         }
     }
-
+        // Viser lyde og de steder lyd er sat til, kun en template for nu, da den kræver at sted er hardcoded ind i databasen.
         public IList<Lyd> GetAllLydMedSted()
         {
             const string selectAllLyde = "SELECT Lydmaling.Lyde, Lydmaling.Dato, Steder.Sted FROM Lydmaling INNER JOIN Steder ON Lydmaling.[FK IdSted]=Steder.IdSted";
