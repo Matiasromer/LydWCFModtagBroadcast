@@ -45,6 +45,10 @@ namespace LydSemesterModtagBroadcast
         // Henter den inner join tabel, så lyd viser også sted (Hardcoded i db)
         [OperationContract]
         IList<Lyd> GetAllLydMedSted();
+
+        [OperationContract]
+        IList<Lyd> GetMaxLyd();
+
         //[OperationContract]
         //void UpdateStatus(string onOff);
     }

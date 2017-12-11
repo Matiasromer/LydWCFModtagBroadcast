@@ -22,7 +22,6 @@ namespace LydSemesterModtagBroadcast
         public bool TjekStatus()
         {
             const string gemswitch = "SELECT TOP(1) OnOff from Switch";
-
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
@@ -31,16 +30,12 @@ namespace LydSemesterModtagBroadcast
                     using (SqlDataReader reader = selectCommand.ExecuteReader())
                     {
                         while (reader.Read())
-                        {
-                            //bool kontakt = reader.GetBoolean(1);
+                        {                            
                             bool kontakt = (bool) reader["OnOff"];
-
-
                             if (kontakt == true)
                             {
                                 return true;
                             }
-
                         }
                     }
                 }
@@ -237,10 +232,7 @@ namespace LydSemesterModtagBroadcast
         // Updatere switch table, så den kigger på tjekstatus metoden og ser om switch er false eller true og sætter den til det omvendte (eks. hvis tjekliste er sat til false vil Updat2 metoden ændre det til true
         public void Updat2()
         {
-
-            // const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
             bool status = TjekStatus();
-
             if (status == true)
             {
                 bool value = false;
@@ -251,44 +243,18 @@ namespace LydSemesterModtagBroadcast
                 UpdateCommand.Parameters.AddWithValue("@Value", SqlDbType.Bit).Value = 0;
                 con.Open();
                 UpdateCommand.ExecuteNonQuery();
-                con.Close();
-
-                //using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
-                //{
-                //    databaseConnection.Open();
-                //    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
-                //    {
-                //        updateCommand.Parameters.AddWithValue("@Value", value);
-                //    }
-                //}
-
+                con.Close();            
             }
-
             else if (status == false)
-
             {
                 bool value = true;
-                const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
-
-               
+                const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";       
                 SqlConnection con = new SqlConnection(ConnectionString);
                 SqlCommand UpdateCommand = new SqlCommand(update, con);
                 UpdateCommand.Parameters.AddWithValue("@Value", SqlDbType.Bit).Value = 1;
                 con.Open();
                 UpdateCommand.ExecuteNonQuery();
-                con.Close();
-                //using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
-                //{
-                //    databaseConnection.Open();
-                //    using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
-                //    {
-                //        updateCommand.Parameters.AddWithValue("@Value", value);
-
-                //        updateCommand.EndExecuteNonQuery();
-
-                //    }
-
-                //}
+                con.Close();              
             }
         }
         // Sorter listen af lyde efter lydniveau (descending) fra lavent til højest
@@ -436,6 +402,39 @@ namespace LydSemesterModtagBroadcast
                 }
             }
         }
+        // brugt til mail
+        public IList<Lyd> GetMaxLyd()
+        {
+            const string selectMaxLyde = "SELECT TOP 1 * FROM Lydmaling ORDER BY Lyde DESC";
+
+            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+            {
+                databaseConnection.Open();
+                using (SqlCommand selectCommand = new SqlCommand(selectMaxLyde, databaseConnection))
+                {
+                    using (SqlDataReader reader = selectCommand.ExecuteReader())
+
+                    {
+                        List<Lyd> lydList = new List<Lyd>();
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string lyde = reader.GetString(1);
+                            DateTime date = reader.GetDateTime(2);
+                            Lyd l1 = new Lyd()
+                            {
+                                Id = id,
+                                Lyde = lyde,
+                                Date = date
+                            };
+                            lydList.Add(l1);
+                        }
+                        return lydList;
+                    }
+                }
+            }
+        }
+
     }
 
     // Lave en metode(er) der sætter idsted til en hvis value ud fra hvilken metode bliver kaldt. derefter kan liste af lyd ud fra idsted hentes efter hvilekt id man ønsker
