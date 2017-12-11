@@ -20,5 +20,8 @@ namespace LydSemesterModtagBroadcast
 
         [DataMember]
         public string Email;
+
+        [DataMember]
+        public string Sted;
     }
 }

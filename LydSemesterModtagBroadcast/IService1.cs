@@ -49,6 +49,9 @@ namespace LydSemesterModtagBroadcast
         [OperationContract]
         IList<Lyd> GetMaxLyd();
 
+        [OperationContract]
+        IList<Personale> GetHvorHvem();
+
         //[OperationContract]
         //void UpdateStatus(string onOff);
     }

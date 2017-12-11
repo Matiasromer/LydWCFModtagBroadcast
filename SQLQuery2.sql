@@ -1,1 +1,1 @@
-﻿SELECT Lydmaling.Lyde, Lydmaling.Dato, Steder.Sted FROM Lydmaling INNER JOIN Steder ON Lydmaling.[FK IdSted]=Steder.IdSted ORDER BY Lyde DESC
+﻿SELECT Personale.Navn FROM Personale INNER JOIN Steder ON Personale.[FK IdSted]=Steder.IdSted

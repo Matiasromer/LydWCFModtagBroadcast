@@ -16,7 +16,7 @@ namespace LydSemesterModtagBroadcast.Tests
         {
             Service1 service = new Service1();
 
-            service.SetIdSted(3);
+            service.SetIdSted("3");
 
             //Assert.Fail();
         }

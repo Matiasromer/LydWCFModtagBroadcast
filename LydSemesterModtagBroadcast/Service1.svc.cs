@@ -435,8 +435,43 @@ namespace LydSemesterModtagBroadcast
             }
         }
 
+        // viser kun personer men ikke sted ... skal også vise sted (Kig på det)
+        public IList<Personale> GetHvorHvem()
+        {
+            const string selectAllLyde =
+                "SELECT Personale.Navn FROM Personale INNER JOIN Steder ON Personale.[FK StedId]=Steder.IdSted";
+
+            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+            {
+                databaseConnection.Open();
+                using (SqlCommand selectCommand = new SqlCommand(selectAllLyde, databaseConnection))
+                {
+                    using (SqlDataReader reader = selectCommand.ExecuteReader())
+
+                    {
+
+                        List<Personale> personList = new List<Personale>();
+                        while (reader.Read())
+                        {
+
+                            string personale = reader.GetString(0);
+                            string sted = reader.GetString(2);
+                            Personale l1 = new Personale()
+                            {
+                                Navn = personale,
+                                Sted = sted
+                            };
+                            personList.Add(l1);
+
+                        }
+                        return personList;
+                    }
+                }
+            }
+        }
     }
+}
 
     // Lave en metode(er) der sætter idsted til en hvis value ud fra hvilken metode bliver kaldt. derefter kan liste af lyd ud fra idsted hentes efter hvilekt id man ønsker
 
-}
+
