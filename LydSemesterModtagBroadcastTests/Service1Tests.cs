@@ -6,28 +6,75 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LydSemesterModtagBroadcast.Tests
+namespace LydSemesterModtagBroadcastTests
 {
     [TestClass()]
     public class Service1Tests
     {
         [TestMethod()]
-        public void SetIdStedTest()
+        public void TjekStatusTestTrue()
         {
             Service1 service = new Service1();
 
-            service.SetIdSted("3");
+            service.TjekStatus();
 
-            //Assert.Fail();
+            Assert.IsTrue(service.TjekStatus());
         }
-        //[TestMethod()]
-        //public void GetAllLydTest()
-        //{
-        //    Service1 service = new Service1();
 
-        //    service.GetAllLyd();
+        [TestMethod()]
+        public void TjekStatusTestFalse()
+        {
+            Service1 service = new Service1();
 
-        //    Assert.AreEqual();
-        //}
+            service.TjekStatus();
+
+            Assert.IsFalse(service.TjekStatus());
+        }
+
+        [TestMethod()]
+        public void SetIdStedTest()
+        {
+
+
+            Service1 service = new Service1();
+
+            service.SetIdSted("1");
+
+
+        }
+
+
+        [TestMethod()]
+        public void PostLydToListTest()
+        {
+            Service1 service2 = new Service1();
+
+            service2.PostLydToList("70");
+
+
+        }
+
+        [TestMethod()]
+        public void Updat2Test()
+        {
+            bool value = true;
+
+            Service1 service3 = new Service1();
+
+            service3.Update();
+
+            Assert.IsTrue(value);
+
+
+        }
+
+
+
     }
+
+
+
+   
+      
+    
 }

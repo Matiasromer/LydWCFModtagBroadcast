@@ -18,6 +18,7 @@ namespace LydSemesterModtagBroadcast
         private string ConnectionString =
                 "Server=tcp:eventmserver.database.windows.net,1433;Initial Catalog=EMDatabase;Persist Security Info=False;User ID=Matias;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
             ;
+
         //Kigger på det øverste(eneste) felt i switch table for at se om den er true eller false
         public bool TjekStatus()
         {
@@ -30,7 +31,7 @@ namespace LydSemesterModtagBroadcast
                     using (SqlDataReader reader = selectCommand.ExecuteReader())
                     {
                         while (reader.Read())
-                        {                            
+                        {
                             bool kontakt = (bool) reader["OnOff"];
                             if (kontakt == true)
                             {
@@ -42,6 +43,7 @@ namespace LydSemesterModtagBroadcast
             }
             return false;
         }
+
         // Henter alle lyde fra databasen
         public IList<Lyd> GetAllLyd()
         {
@@ -75,31 +77,11 @@ namespace LydSemesterModtagBroadcast
             }
         }
 
-        
-
-
-        public string GetData(int value)
-        {
-            return string.Format("You entered: {0}", value);
-        }
-
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
-        {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
-        }
         // Poster lyden fra udp reciever til databasen
         public int PostLydToList(string lyde)
         {
             int hentstedid = usestedid();
-                const string postLyde = "insert into Lydmaling (Lyde, [FK IdSted]) values (@lyde, @sted)";
+            const string postLyde = "insert into Lydmaling (Lyde, [FK IdSted]) values (@lyde, @sted)";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
@@ -114,11 +96,11 @@ namespace LydSemesterModtagBroadcast
             }
 
         }
-
+        // sender string til db fra php
         public int SetIdSted(string stedstr)
         {
             int sted = Int32.Parse(stedstr);
-            
+
             const string setid = "UPDATE StedID SET IdSted = @sted";
 
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
@@ -132,13 +114,13 @@ namespace LydSemesterModtagBroadcast
                 }
             }
         }
-
+        // bruges til at vælge id fra sted (bruges i PostLydToList)
         public int usestedid()
         {
             const string kaldid = "SELECT * FROM StedID";
 
 
-            using (SqlConnection databaseConnection= new SqlConnection(ConnectionString))
+            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
                 using (SqlCommand selectIdCommand = new SqlCommand(kaldid, databaseConnection))
@@ -158,79 +140,9 @@ namespace LydSemesterModtagBroadcast
             }
         }
 
-        //public int SetStedId(int stedid)
-        //{
-
-        //    const string hentparameter = "SELECT IdSted FROM Steder WHERE IdSted = @stedid";
-        //    using (SqlConnection databaseConnection1 = new SqlConnection(ConnectionString))
-        //    {
-        //        databaseConnection1.Open();
-        //        using (SqlCommand getCommand = new SqlCommand(hentparameter, databaseConnection1))
-        //        {
-        //            getCommand.Parameters.AddWithValue("@stedid", stedid);
-        //            using (SqlDataReader reader = getCommand.ExecuteReader())
-        //            {
-        //                int stedparameter = 0;
-
-        //                while (reader.Read())
-        //                {
-        //                    stedparameter = reader.GetInt32(0);
-        //                }
-        //                return stedparameter;
-        //            }
-        //        }
-        //    }
-
-        //}
-
-        public int SetStedId2()
-        {
-
-            const string hentparameter = "SELECT IdSted FROM Steder WHERE IdSted = 2";
-            using (SqlConnection databaseConnection1 = new SqlConnection(ConnectionString))
-            {
-                databaseConnection1.Open();
-                using (SqlCommand getCommand = new SqlCommand(hentparameter, databaseConnection1))
-                {
-                    using (SqlDataReader reader = getCommand.ExecuteReader())
-                    {
-                        int stedparameter = 0;
-
-                        while (reader.Read())
-                        {
-                            stedparameter = reader.GetInt32(0);
-                        }
-                        return stedparameter;
-                    }
-                }
-            }
-
-        }
-
-        //public void UpdateStatus(string onOff)
-        //{
-
-        //    bool value = false;
-        //    if (onOff == "1")
-        //    {
-        //        value = true;
-        //    }
-        //    const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
-
-        //    using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
-        //    {
-        //        databaseConnection.Open();
-        //        using (SqlCommand updateCommand = new SqlCommand(update, databaseConnection))
-        //        {
-        //            updateCommand.Parameters.AddWithValue("@Value", value);
-
-
-        //        }
-        //    }
-
-        //}
+       
         // Updatere switch table, så den kigger på tjekstatus metoden og ser om switch er false eller true og sætter den til det omvendte (eks. hvis tjekliste er sat til false vil Updat2 metoden ændre det til true
-        public void Updat2()
+        public void Update()
         {
             bool status = TjekStatus();
             if (status == true)
@@ -243,24 +155,26 @@ namespace LydSemesterModtagBroadcast
                 UpdateCommand.Parameters.AddWithValue("@Value", SqlDbType.Bit).Value = 0;
                 con.Open();
                 UpdateCommand.ExecuteNonQuery();
-                con.Close();            
+                con.Close();
             }
             else if (status == false)
             {
                 bool value = true;
-                const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";       
+                const string update = "UPDATE Switch SET OnOff = @Value WHERE Id = 1 ";
                 SqlConnection con = new SqlConnection(ConnectionString);
                 SqlCommand UpdateCommand = new SqlCommand(update, con);
                 UpdateCommand.Parameters.AddWithValue("@Value", SqlDbType.Bit).Value = 1;
                 con.Open();
                 UpdateCommand.ExecuteNonQuery();
-                con.Close();              
+                con.Close();
             }
         }
+
         // Sorter listen af lyde efter lydniveau (descending) fra lavent til højest
         public IList<Lyd> GetAlllydSorted()
         {
-            const string selectAllLyde = "SELECT Lydmaling.Lyde, Lydmaling.Dato, Steder.Sted FROM Lydmaling INNER JOIN Steder ON Lydmaling.[FK IdSted]=Steder.IdSted ORDER BY Lyde DESC";
+            const string selectAllLyde =
+                "SELECT Lydmaling.Lyde, Lydmaling.Dato, Steder.Sted FROM Lydmaling INNER JOIN Steder ON Lydmaling.[FK IdSted]=Steder.IdSted ORDER BY Lyde DESC";
 
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
@@ -274,13 +188,13 @@ namespace LydSemesterModtagBroadcast
 
                         while (reader.Read())
                         {
-                            
+
                             string lyde = reader.GetString(0);
                             DateTime date = reader.GetDateTime(1);
                             string sted = reader.GetString(2);
                             Lyd l1 = new Lyd()
                             {
-                                
+
                                 Lyde = lyde,
                                 Date = date,
                                 Sted = sted
@@ -294,6 +208,7 @@ namespace LydSemesterModtagBroadcast
                 }
             }
         }
+
         // Henter personale fra db (hardcoded ind for at vise ekspempel)
         public IList<Personale> GetAllPersonale()
         {
@@ -333,43 +248,9 @@ namespace LydSemesterModtagBroadcast
 
 
 
-        // mangler at blive færdigjort, metode teori for at hente liste af lyde ud fra idsted 
-        public IList<Lyd> GetAlllydSted2()
-        { 
+        
 
-        const string selectAllLyde = "SELECT * FROM Lydmaling WHERE [FK IdSted] = 2 ";
-
-        using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
-        {
-            databaseConnection.Open();
-            using (SqlCommand selectCommand = new SqlCommand(selectAllLyde, databaseConnection))
-            {
-                using (SqlDataReader reader = selectCommand.ExecuteReader())
-
-                {
-                    List<Lyd> lydList = new List<Lyd>();
-
-                    while (reader.Read())
-                    {
-                        int id = reader.GetInt32(0);
-                        string lyde = reader.GetString(1);
-                        DateTime date = reader.GetDateTime(2);
-                        Lyd l1 = new Lyd()
-                        {
-                            Id = id,
-                            Lyde = lyde,
-                            Date = date
-                        };
-
-                        lydList.Add(l1);
-                    }
-
-                    return lydList;
-                }
-            }
-        }
-    }
-        // Viser lyde og de steder lyd er sat til, kun en template for nu, da den kræver at sted er hardcoded ind i databasen.
+        // Viser lyde og de steder lyd er sat til.
         public IList<Lyd> GetAllLydMedSted()
         {
             const string selectAllLyde = "SELECT Lydmaling.Lyde, Lydmaling.Dato, Steder.Sted FROM Lydmaling INNER JOIN Steder ON Lydmaling.[FK IdSted]=Steder.IdSted";
@@ -402,7 +283,7 @@ namespace LydSemesterModtagBroadcast
                 }
             }
         }
-        // brugt til mail
+        // sender max lyd (brugt til mail)
         public IList<Lyd> GetMaxLyd()
         {
             const string selectMaxLyde = "SELECT TOP 1 * FROM Lydmaling ORDER BY Lyde DESC";
@@ -435,12 +316,11 @@ namespace LydSemesterModtagBroadcast
             }
         }
 
-        // viser kun personer men ikke sted ... skal også vise sted (Kig på det)
+        // bruges til mail system - sender personale info 
         public IList<Personale> GetHvorHvem()
         {
             const string selectAllLyde =
-                "SELECT Personale.Navn FROM Personale INNER JOIN Steder ON Personale.[FK StedId]=Steder.IdSted";
-
+                "SELECT Personale.Navn, Personale.Telf, Personale.Email, Steder.Sted FROM Personale INNER JOIN Steder ON Personale.[FK StedId]=Steder.IdSted";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
@@ -455,11 +335,15 @@ namespace LydSemesterModtagBroadcast
                         {
 
                             string personale = reader.GetString(0);
-                            string sted = reader.GetString(2);
+                            int telefon = reader.GetInt32(1);
+                            string email = reader.GetString(2);
+                            string sted = reader.GetString(3);
                             Personale l1 = new Personale()
                             {
                                 Navn = personale,
-                                Sted = sted
+                                Sted = sted,
+                                Telf = telefon,
+                                Email = email
                             };
                             personList.Add(l1);
 
@@ -472,6 +356,6 @@ namespace LydSemesterModtagBroadcast
     }
 }
 
-    // Lave en metode(er) der sætter idsted til en hvis value ud fra hvilken metode bliver kaldt. derefter kan liste af lyd ud fra idsted hentes efter hvilekt id man ønsker
+   
 
 

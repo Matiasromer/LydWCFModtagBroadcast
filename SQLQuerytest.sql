@@ -1,0 +1,1 @@
+﻿SELECT Personale.Navn FROM Personale INNER JOIN Steder ON Personale.[FK StedId]=Steder.IdSted

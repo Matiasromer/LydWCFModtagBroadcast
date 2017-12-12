@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LydSemesterModtagBroadcast;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace teststed
         private static string ConnectionString =
                 "Server=tcp:eventmserver.database.windows.net,1433;Initial Catalog=EMDatabase;Persist Security Info=False;User ID=Matias;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
             ;
+
         static void Main(string[] args)
         {
             int sted = 4;
@@ -25,11 +27,14 @@ namespace teststed
                     updateCommand.Parameters.AddWithValue("@sted", sted);
                     int rowsAffected = updateCommand.ExecuteNonQuery();
                     Console.WriteLine(rowsAffected);
-                    
+
                 }
-                
+
             }
             Console.ReadKey();
+
+
+
         }
     }
 }

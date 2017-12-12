@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LydSemesterModtagBroadcast\LydSemesterModtagBroadcast.csproj">
+      <Project>{04A18E84-41C4-4B29-A1CE-4DDF3AA34504}</Project>
+      <Name>LydSemesterModtagBroadcast</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
